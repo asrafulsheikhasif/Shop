@@ -3,150 +3,265 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>দোকানের ডেবিট-ক্রেডিট হিসাব</title>
+    <title>আসিফ কনফেকশনারি - ইনভেন্টরি প্রো+</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; padding: 20px; color: #333; }
-        .container { max-width: 600px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #2c3e50; }
+        :root { --primary: #2c3e50; --success: #27ae60; --danger: #e74c3c; --warning: #f39c12; --light: #f4f7f6; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: var(--light); padding: 15px; margin: 0; }
+        .container { max-width: 850px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h2, h3 { text-align: center; color: var(--primary); margin-top: 0; }
         
-        .input-group { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
-        input, select { flex: 1; min-width: 140px; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; }
+        .section { border: 1px solid #eee; padding: 15px; border-radius: 10px; margin-bottom: 20px; background: #fff; }
+        .input-group { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; }
+        input, select { flex: 1; min-width: 120px; padding: 12px; border: 1px solid #ddd; border-radius: 6px; }
         
-        .btn-add { width: 100%; padding: 12px; background-color: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; }
-        .btn-add:hover { background-color: #0056b3; }
+        .btn-add { background: var(--primary); color: white; width: 100%; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .btn-sell { background: var(--success); color: white; width: 100%; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px; }
 
-        .summary-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 20px; text-align: center; }
-        .card { padding: 15px; border-radius: 10px; color: white; }
-        .buy-card { background-color: #e74c3c; } /* কেনা - লাল */
-        .sell-card { background-color: #27ae60; } /* বেচা - সবুজ */
-        .balance-card { background-color: #f39c12; } /* ব্যালেন্স - কমলা */
+        .sales-controls { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+        .search-container { flex: 2; position: relative; min-width: 200px; }
+        .category-filter { flex: 1; min-width: 150px; }
 
-        table { width: 100%; margin-top: 20px; border-collapse: collapse; background: #fff; }
-        th, td { border: 1px solid #eee; padding: 12px; text-align: center; }
-        th { background-color: #f8f9fa; }
+        #searchList { position: absolute; width: 100%; background: white; border: 1px solid #ddd; z-index: 100; max-height: 200px; overflow-y: auto; border-radius: 0 0 6px 6px; display: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .search-item { padding: 12px; cursor: pointer; border-bottom: 1px solid #f0f0f0; }
+        .search-item:hover { background: #eef2f7; }
+
+        /* কোয়ান্টিটি বাটন স্টাইল */
+        .qty-wrapper { display: flex; align-items: center; gap: 5px; background: #f9f9f9; border: 1px solid #ddd; border-radius: 6px; padding: 5px; }
+        .qty-btn { width: 35px; height: 35px; border: none; background: #eee; border-radius: 4px; cursor: pointer; font-size: 20px; font-weight: bold; color: var(--primary); }
+        .qty-btn:hover { background: #ddd; }
+        .qty-input { width: 50px !important; text-align: center; border: none !important; background: transparent !important; padding: 0 !important; min-width: unset !important; }
+
+        .summary { display: flex; justify-content: space-around; gap: 10px; margin: 20px 0; }
+        .card { flex: 1; padding: 15px; border-radius: 8px; color: white; text-align: center; font-size: 14px; font-weight: bold; }
         
-        .type-buy { color: #e74c3c; font-weight: bold; }
-        .type-sell { color: #27ae60; font-weight: bold; }
-        
-        .delete-btn { color: #999; cursor: pointer; border: none; background: none; font-size: 18px; }
-        .delete-btn:hover { color: red; }
-        .btn-clear { width: 100%; padding: 10px; margin-top: 20px; background-color: #6c757d; color: white; border: none; border-radius: 8px; cursor: pointer; }
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #eee; padding: 10px; text-align: center; font-size: 14px; }
+        th { background: #f8f9fa; }
+        .profit-text { color: var(--success); font-weight: bold; }
+
+        .footer { text-align: center; margin-top: 25px; font-weight: bold; color: #888; border-top: 2px dashed #eee; padding-top: 15px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>দোকানের কেনা-বেচা ডায়েরি</h2>
-    
-    <div class="input-group">
-        <input type="text" id="itemName" placeholder="পণ্যের নাম">
-        <input type="number" id="itemPrice" placeholder="টাকার পরিমাণ">
-        <select id="itemType">
-            <option value="sell">বেচা (Income)</option>
-            <option value="buy">কেনা (Expense)</option>
-        </select>
-    </div>
-    <button class="btn-add" onclick="addItem()">লিস্টে যোগ করুন</button>
+    <h2>আসিফ কনফেকশনারি</h2>
 
-    <div class="summary-cards">
-        <div class="card sell-card">
-            <small>মোট বেচা</small><br>
-            <span id="totalSell">০</span> ৳
+    <div class="section">
+        <h3>📦 নতুন পণ্য স্টক করুন</h3>
+        <div class="input-group">
+            <input type="text" id="setupCat" placeholder="ক্যাটাগরি">
+            <input type="text" id="setupName" placeholder="পণ্যের পুরো নাম">
+            <input type="number" id="setupBuyPrice" placeholder="একটির কেনার দাম">
         </div>
-        <div class="card buy-card">
-            <small>মোট কেনা</small><br>
-            <span id="totalBuy">০</span> ৳
-        </div>
-        <div class="card balance-card">
-            <small>ব্যালেন্স</small><br>
-            <span id="netBalance">০</span> ৳
-        </div>
+        <button class="btn-add" onclick="saveProduct()">ইনভেন্টরিতে যোগ করুন</button>
     </div>
 
-    <table id="itemTable">
-        <thead>
-            <tr>
-                <th>নাম</th>
-                <th>ধরন</th>
-                <th>টাকা</th>
-                <th>মুছুন</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+    <div class="section">
+        <h3>💰 পণ্য বিক্রি করুন</h3>
+        <div class="sales-controls">
+            <select id="catFilter" class="category-filter" onchange="filterByCategory()">
+                <option value="">সব ক্যাটাগরি</option>
+            </select>
+            <div class="search-container">
+                <input type="text" id="productSearch" placeholder="নাম লিখে খুঁজুন..." oninput="searchProduct()">
+                <div id="searchList"></div>
+            </div>
+        </div>
 
-    <button class="btn-clear" onclick="clearAll()">সব ডেটা মুছুন</button>
+        <div id="selectedProductInfo" style="margin: 10px 0; padding: 10px; background: #e8f4fd; border-radius: 6px; display: none; border-left: 4px solid #3498db;"></div>
+        
+        <div class="input-group">
+            <input type="number" id="salePrice" placeholder="বিক্রয়মূল্য (প্রতি পিস)">
+            <div class="qty-wrapper">
+                <button class="qty-btn" onclick="changeQty(-1)">−</button>
+                <input type="number" id="saleQty" class="qty-input" value="1" min="1">
+                <button class="qty-btn" onclick="changeQty(1)">+</button>
+            </div>
+        </div>
+        <button class="btn-sell" onclick="processSale()">বিক্রি সম্পন্ন করুন</button>
+    </div>
+
+    <div class="summary">
+        <div class="card" style="background: var(--warning);">মোট কেনা <br><span id="totalBuy">০</span> ৳</div>
+        <div class="card" style="background: var(--success);">মোট বিক্রি <br><span id="totalSell">০</span> ৳</div>
+        <div class="card" style="background: #2980b9);">মোট লাভ <br><span id="totalProfit">০</span> ৳</div>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>পণ্য</th>
+                    <th>সংখ্যা</th>
+                    <th>কেনা (মোট)</th>
+                    <th>বিক্রি (মোট)</th>
+                    <th>লাভ</th>
+                    <th>মুছুন</th>
+                </tr>
+            </thead>
+            <tbody id="saleLog"></tbody>
+        </table>
+    </div>
+
+    <div class="footer">--- আসিফ কনফেকশনারি ---</div>
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", displayItems);
+    let inventory = JSON.parse(localStorage.getItem("asif_inv_v5")) || [];
+    let sales = JSON.parse(localStorage.getItem("asif_sales_v5")) || [];
+    let selectedIdx = -1;
 
-    function addItem() {
-        let name = document.getElementById("itemName").value;
-        let price = document.getElementById("itemPrice").value;
-        let type = document.getElementById("itemType").value;
+    document.addEventListener("DOMContentLoaded", () => {
+        updateCategoryDropdown();
+        displaySales();
+    });
 
-        if (name === "" || price === "") {
-            alert("দয়া করে নাম ও দাম লিখুন।");
+    // কোয়ান্টিটি পরিবর্তনের ফাংশন
+    function changeQty(amount) {
+        let qtyInput = document.getElementById("saleQty");
+        let current = parseInt(qtyInput.value);
+        if (current + amount >= 1) {
+            qtyInput.value = current + amount;
+        }
+    }
+
+    function saveProduct() {
+        let cat = document.getElementById("setupCat").value.trim();
+        let name = document.getElementById("setupName").value.trim();
+        let buyPrice = parseFloat(document.getElementById("setupBuyPrice").value);
+
+        if (!cat || !name || isNaN(buyPrice)) return alert("সব তথ্য দিন!");
+
+        inventory.push({ cat, name, buyPrice });
+        localStorage.setItem("asif_inv_v5", JSON.stringify(inventory));
+        
+        document.getElementById("setupCat").value = "";
+        document.getElementById("setupName").value = "";
+        document.getElementById("setupBuyPrice").value = "";
+        
+        updateCategoryDropdown();
+        alert("পণ্যটি সেভ হয়েছে!");
+    }
+
+    function updateCategoryDropdown() {
+        let catSelect = document.getElementById("catFilter");
+        let categories = [...new Set(inventory.map(p => p.cat))];
+        catSelect.innerHTML = '<option value="">সব ক্যাটাগরি</option>';
+        categories.forEach(c => {
+            let opt = document.createElement("option");
+            opt.value = c; opt.innerText = c;
+            catSelect.appendChild(opt);
+        });
+    }
+
+    function searchProduct() {
+        let query = document.getElementById("productSearch").value.toLowerCase();
+        let catValue = document.getElementById("catFilter").value;
+        let list = document.getElementById("searchList");
+        list.innerHTML = "";
+
+        if (query === "" && catValue === "") {
+            list.style.display = "none";
             return;
         }
 
-        let item = { 
-            name: name, 
-            price: parseFloat(price), 
-            type: type,
-            date: new Date().toLocaleString('bn-BD')
-        };
-
-        let items = JSON.parse(localStorage.getItem("shopLedger")) || [];
-        items.push(item);
-        localStorage.setItem("shopLedger", JSON.stringify(items));
-
-        document.getElementById("itemName").value = "";
-        document.getElementById("itemPrice").value = "";
-        displayItems();
-    }
-
-    function displayItems() {
-        let items = JSON.parse(localStorage.getItem("shopLedger")) || [];
-        let tableBody = document.querySelector("#itemTable tbody");
-        tableBody.innerHTML = "";
-        
-        let totalBuy = 0;
-        let totalSell = 0;
-
-        items.forEach((item, index) => {
-            let typeText = item.type === 'buy' ? 'কেনা' : 'বেচা';
-            let typeClass = item.type === 'buy' ? 'type-buy' : 'type-sell';
-            
-            if(item.type === 'buy') totalBuy += item.price;
-            else totalSell += item.price;
-
-            let row = `<tr>
-                <td>${item.name}</td>
-                <td class="${typeClass}">${typeText}</td>
-                <td>${item.price.toFixed(2)}</td>
-                <td><button class="delete-btn" onclick="removeItem(${index})">&times;</button></td>
-            </tr>`;
-            tableBody.innerHTML += row;
+        let filtered = inventory.filter((p, index) => {
+            p.originalIndex = index;
+            let matchName = p.name.toLowerCase().includes(query);
+            let matchCat = catValue === "" || p.cat === catValue;
+            return matchName && matchCat;
         });
 
-        document.getElementById("totalBuy").innerText = totalBuy.toFixed(2);
-        document.getElementById("totalSell").innerText = totalSell.toFixed(2);
-        document.getElementById("netBalance").innerText = (totalSell - totalBuy).toFixed(2);
+        if (filtered.length > 0) {
+            list.style.display = "block";
+            filtered.forEach(p => {
+                let div = document.createElement("div");
+                div.className = "search-item";
+                div.innerHTML = `<strong>${p.name}</strong> <small>(${p.cat})</small><br>কেনা: ${p.buyPrice}৳`;
+                div.onclick = () => selectProduct(p.originalIndex);
+                list.appendChild(div);
+            });
+        } else {
+            list.style.display = "none";
+        }
     }
 
-    function removeItem(index) {
-        let items = JSON.parse(localStorage.getItem("shopLedger"));
-        items.splice(index, 1);
-        localStorage.setItem("shopLedger", JSON.stringify(items));
-        displayItems();
+    function filterByCategory() {
+        document.getElementById("productSearch").value = "";
+        searchProduct();
     }
 
-    function clearAll() {
-        if (confirm("আপনি কি নিশ্চিত যে সব তথ্য মুছে ফেলবেন?")) {
-            localStorage.removeItem("shopLedger");
-            displayItems();
+    function selectProduct(index) {
+        selectedIdx = index;
+        let p = inventory[index];
+        document.getElementById("productSearch").value = p.name;
+        let infoBox = document.getElementById("selectedProductInfo");
+        infoBox.style.display = "block";
+        infoBox.innerHTML = `সিলেক্টেড: <strong>${p.name}</strong> | কেনা দাম: ${p.buyPrice} ৳`;
+        document.getElementById("searchList").style.display = "none";
+    }
+
+    function processSale() {
+        let sPrice = parseFloat(document.getElementById("salePrice").value);
+        let qty = parseInt(document.getElementById("saleQty").value);
+
+        if (selectedIdx === -1 || isNaN(sPrice) || isNaN(qty) || qty < 1) {
+            return alert("সঠিক পণ্য, মূল্য এবং পরিমাণ দিন!");
+        }
+
+        let product = inventory[selectedIdx];
+        let totalBuy = product.buyPrice * qty;
+        let totalSell = sPrice * qty;
+        let totalProfit = totalSell - totalBuy;
+
+        sales.push({
+            name: product.name,
+            qty: qty,
+            buy: totalBuy,
+            sell: totalSell,
+            profit: totalProfit
+        });
+
+        localStorage.setItem("asif_sales_v5", JSON.stringify(sales));
+        
+        document.getElementById("productSearch").value = "";
+        document.getElementById("salePrice").value = "";
+        document.getElementById("saleQty").value = "1";
+        document.getElementById("selectedProductInfo").style.display = "none";
+        selectedIdx = -1;
+        
+        displaySales();
+    }
+
+    function displaySales() {
+        let log = document.getElementById("saleLog");
+        log.innerHTML = "";
+        let tBuy = 0, tSell = 0, tProfit = 0;
+
+        sales.forEach((s, index) => {
+            tBuy += s.buy; tSell += s.sell; tProfit += s.profit;
+            log.innerHTML += `<tr>
+                <td>${s.name}</td>
+                <td>${s.qty}</td>
+                <td>${s.buy.toFixed(2)}</td>
+                <td>${s.sell.toFixed(2)}</td>
+                <td class="profit-text">${s.profit.toFixed(2)}</td>
+                <td><button onclick="removeSale(${index})" style="color:red; background:none; border:none; cursor:pointer; font-size:18px;">&times;</button></td>
+            </tr>`;
+        });
+
+        document.getElementById("totalBuy").innerText = tBuy.toFixed(2);
+        document.getElementById("totalSell").innerText = tSell.toFixed(2);
+        document.getElementById("totalProfit").innerText = tProfit.toFixed(2);
+    }
+
+    function removeSale(index) {
+        if(confirm("এই হিসাবটি মুছতে চান?")) {
+            sales.splice(index, 1);
+            localStorage.setItem("asif_sales_v5", JSON.stringify(sales));
+            displaySales();
         }
     }
 </script>
