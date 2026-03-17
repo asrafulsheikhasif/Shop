@@ -3,107 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>স্থায়ী দোকানের হিসাব তালিকা</title>
+    <title>দোকানের ডেবিট-ক্রেডিট হিসাব</title>
     <style>
-        body { font-family: 'Arial', sans-serif; background-color: #f0f2f5; padding: 20px; }
-        .container { max-width: 500px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #1a73e8; margin-bottom: 20px; }
-        input { width: 95%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
-        .btn-add { width: 100%; padding: 12px; background-color: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; transition: 0.3s; }
-        .btn-add:hover { background-color: #218838; }
-        .btn-clear { width: 100%; padding: 10px; margin-top: 15px; background-color: #dc3545; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; }
-        table { width: 100%; margin-top: 20px; border-collapse: collapse; }
-        th, td { border: 1px solid #eee; padding: 12px; text-align: left; }
-        th { background-color: #f8f9fa; color: #555; }
-        .total-section { margin-top: 20px; font-weight: bold; font-size: 20px; text-align: right; border-top: 2px solid #1a73e8; padding-top: 10px; color: #333; }
-        .delete-btn { color: red; cursor: pointer; font-weight: bold; border: none; background: none; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; padding: 20px; color: #333; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #2c3e50; }
+        
+        .input-group { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+        input, select { flex: 1; min-width: 140px; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; }
+        
+        .btn-add { width: 100%; padding: 12px; background-color: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; }
+        .btn-add:hover { background-color: #0056b3; }
+
+        .summary-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 20px; text-align: center; }
+        .card { padding: 15px; border-radius: 10px; color: white; }
+        .buy-card { background-color: #e74c3c; } /* কেনা - লাল */
+        .sell-card { background-color: #27ae60; } /* বেচা - সবুজ */
+        .balance-card { background-color: #f39c12; } /* ব্যালেন্স - কমলা */
+
+        table { width: 100%; margin-top: 20px; border-collapse: collapse; background: #fff; }
+        th, td { border: 1px solid #eee; padding: 12px; text-align: center; }
+        th { background-color: #f8f9fa; }
+        
+        .type-buy { color: #e74c3c; font-weight: bold; }
+        .type-sell { color: #27ae60; font-weight: bold; }
+        
+        .delete-btn { color: #999; cursor: pointer; border: none; background: none; font-size: 18px; }
+        .delete-btn:hover { color: red; }
+        .btn-clear { width: 100%; padding: 10px; margin-top: 20px; background-color: #6c757d; color: white; border: none; border-radius: 8px; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>দোকানের ডেইলি হিসাব</h2>
+    <h2>দোকানের কেনা-বেচা ডায়েরি</h2>
     
-    <input type="text" id="itemName" placeholder="পণ্যের নাম (যেমন: ডাল)">
-    <input type="number" id="itemPrice" placeholder="টাকার পরিমাণ (যেমন: ১০০)">
+    <div class="input-group">
+        <input type="text" id="itemName" placeholder="পণ্যের নাম">
+        <input type="number" id="itemPrice" placeholder="টাকার পরিমাণ">
+        <select id="itemType">
+            <option value="sell">বেচা (Income)</option>
+            <option value="buy">কেনা (Expense)</option>
+        </select>
+    </div>
     <button class="btn-add" onclick="addItem()">লিস্টে যোগ করুন</button>
+
+    <div class="summary-cards">
+        <div class="card sell-card">
+            <small>মোট বেচা</small><br>
+            <span id="totalSell">০</span> ৳
+        </div>
+        <div class="card buy-card">
+            <small>মোট কেনা</small><br>
+            <span id="totalBuy">০</span> ৳
+        </div>
+        <div class="card balance-card">
+            <small>ব্যালেন্স</small><br>
+            <span id="netBalance">০</span> ৳
+        </div>
+    </div>
 
     <table id="itemTable">
         <thead>
             <tr>
                 <th>নাম</th>
-                <th>দাম (টাকা)</th>
-                <th>অ্যাকশন</th>
+                <th>ধরন</th>
+                <th>টাকা</th>
+                <th>মুছুন</th>
             </tr>
         </thead>
-        <tbody>
-            </tbody>
+        <tbody></tbody>
     </table>
 
-    <div class="total-section">
-        মোট: <span id="totalAmount">০</span> টাকা
-    </div>
-
-    <button class="btn-clear" onclick="clearAll()">সব ডিলিট করুন</button>
+    <button class="btn-clear" onclick="clearAll()">সব ডেটা মুছুন</button>
 </div>
 
 <script>
-    // পেজ লোড হওয়ার সময় আগের সেভ করা ডাটা নিয়ে আসা
     document.addEventListener("DOMContentLoaded", displayItems);
 
     function addItem() {
         let name = document.getElementById("itemName").value;
         let price = document.getElementById("itemPrice").value;
+        let type = document.getElementById("itemType").value;
 
         if (name === "" || price === "") {
-            alert("দয়া করে নাম ও দাম সঠিকভাবে দিন।");
+            alert("দয়া করে নাম ও দাম লিখুন।");
             return;
         }
 
-        let item = { name: name, price: parseFloat(price) };
+        let item = { 
+            name: name, 
+            price: parseFloat(price), 
+            type: type,
+            date: new Date().toLocaleString('bn-BD')
+        };
 
-        // LocalStorage থেকে আগের লিস্ট আনা
-        let items = JSON.parse(localStorage.getItem("shopItems")) || [];
+        let items = JSON.parse(localStorage.getItem("shopLedger")) || [];
         items.push(item);
+        localStorage.setItem("shopLedger", JSON.stringify(items));
 
-        // নতুন লিস্ট সেভ করা
-        localStorage.setItem("shopItems", JSON.stringify(items));
-
-        // ইনপুট খালি করা এবং টেবিল আপডেট
         document.getElementById("itemName").value = "";
         document.getElementById("itemPrice").value = "";
         displayItems();
     }
 
     function displayItems() {
-        let items = JSON.parse(localStorage.getItem("shopItems")) || [];
+        let items = JSON.parse(localStorage.getItem("shopLedger")) || [];
         let tableBody = document.querySelector("#itemTable tbody");
         tableBody.innerHTML = "";
-        let total = 0;
+        
+        let totalBuy = 0;
+        let totalSell = 0;
 
         items.forEach((item, index) => {
+            let typeText = item.type === 'buy' ? 'কেনা' : 'বেচা';
+            let typeClass = item.type === 'buy' ? 'type-buy' : 'type-sell';
+            
+            if(item.type === 'buy') totalBuy += item.price;
+            else totalSell += item.price;
+
             let row = `<tr>
                 <td>${item.name}</td>
+                <td class="${typeClass}">${typeText}</td>
                 <td>${item.price.toFixed(2)}</td>
-                <td><button class="delete-btn" onclick="removeItem(${index})">X</button></td>
+                <td><button class="delete-btn" onclick="removeItem(${index})">&times;</button></td>
             </tr>`;
             tableBody.innerHTML += row;
-            total += item.price;
         });
 
-        document.getElementById("totalAmount").innerText = total.toFixed(2);
+        document.getElementById("totalBuy").innerText = totalBuy.toFixed(2);
+        document.getElementById("totalSell").innerText = totalSell.toFixed(2);
+        document.getElementById("netBalance").innerText = (totalSell - totalBuy).toFixed(2);
     }
 
     function removeItem(index) {
-        let items = JSON.parse(localStorage.getItem("shopItems"));
+        let items = JSON.parse(localStorage.getItem("shopLedger"));
         items.splice(index, 1);
-        localStorage.setItem("shopItems", JSON.stringify(items));
+        localStorage.setItem("shopLedger", JSON.stringify(items));
         displayItems();
     }
 
     function clearAll() {
-        if (confirm("আপনি কি সব তথ্য মুছে ফেলতে চান?")) {
-            localStorage.removeItem("shopItems");
+        if (confirm("আপনি কি নিশ্চিত যে সব তথ্য মুছে ফেলবেন?")) {
+            localStorage.removeItem("shopLedger");
             displayItems();
         }
     }
