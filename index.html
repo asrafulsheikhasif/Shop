@@ -3,294 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>আসিফ কনফেকশনারি - লোগো ও ব্যাকআপ সহ</title>
+    <title>আসিফ কনফেকশনারি - স্মার্ট এডিট সিস্টেম</title>
     <style>
         :root { --primary: #2c3e50; --success: #27ae60; --danger: #e74c3c; --warning: #f39c12; --light: #f4f7f6; --blue: #2980b9; }
         body { font-family: 'Segoe UI', Arial, sans-serif; background-color: var(--light); padding: 15px; margin: 0; }
         .container { max-width: 850px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         
-        /* লোগো সেকশন */
         .header-section { text-align: center; margin-bottom: 20px; position: relative; }
-        .logo-container { width: 100px; height: 100px; margin: 0 auto 10px; border-radius: 50%; border: 3px solid var(--primary); overflow: hidden; background: #eee; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .logo-container { width: 90px; height: 90px; margin: 0 auto 10px; border-radius: 50%; border: 3px solid var(--primary); overflow: hidden; background: #eee; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         #shopLogo { width: 100%; height: 100%; object-fit: cover; display: none; }
-        .logo-placeholder { font-size: 12px; color: #777; padding: 10px; }
         #logoInput { display: none; }
         
         h2 { margin: 5px 0; color: var(--primary); }
         .section { border: 1px solid #eee; padding: 15px; border-radius: 10px; margin-bottom: 20px; background: #fff; }
         .input-group { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; }
-        input, select { flex: 1; min-width: 120px; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 15px; }
+        input, select { flex: 1; min-width: 120px; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
         
         .btn-add { background: var(--primary); color: white; width: 100%; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; }
         .btn-sell { background: var(--success); color: white; width: 100%; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px; }
 
         .sales-controls { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
         .search-container { flex: 2; position: relative; min-width: 200px; }
-        .category-filter { flex: 1; min-width: 150px; }
-
-        #searchList { position: absolute; width: 100%; background: white; border: 1px solid #ddd; z-index: 100; max-height: 200px; overflow-y: auto; border-radius: 0 0 6px 6px; display: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .search-item { padding: 12px; cursor: pointer; border-bottom: 1px solid #f0f0f0; text-align: left; }
-        .search-item:hover { background: #eef2f7; }
+        
+        #searchList { position: absolute; width: 100%; background: white; border: 1px solid #ddd; z-index: 100; max-height: 250px; overflow-y: auto; border-radius: 0 0 6px 6px; display: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .search-item { padding: 10px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; }
+        .item-info { cursor: pointer; flex-grow: 1; text-align: left; }
+        .edit-icon { background: #f39c12; color: white; padding: 5px 10px; border-radius: 4px; font-size: 12px; cursor: pointer; border: none; margin-left: 10px; }
 
         .qty-wrapper { display: flex; align-items: center; gap: 5px; background: #f9f9f9; border: 1px solid #ddd; border-radius: 6px; padding: 5px; }
         .qty-btn { width: 35px; height: 35px; border: none; background: #eee; border-radius: 4px; cursor: pointer; font-size: 20px; font-weight: bold; }
-        .qty-input { width: 45px !important; text-align: center; border: none !important; background: transparent !important; padding: 0 !important; min-width: unset !important; font-weight: bold; }
+        .qty-input { width: 40px !important; text-align: center; border: none !important; background: transparent !important; padding: 0 !important; min-width: unset !important; }
 
-        .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin: 20px 0; }
-        .card { padding: 15px; border-radius: 10px; color: white; text-align: center; box-shadow: 0 3px 6px rgba(0,0,0,0.1); }
-        .card .amount { font-size: 20px; font-weight: bold; }
+        .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 15px 0; }
+        .card { padding: 12px; border-radius: 8px; color: white; text-align: center; }
+        .card .amount { font-size: 18px; font-weight: bold; }
         
-        .table-container { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #eee; padding: 10px; text-align: center; font-size: 14px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+        th, td { border: 1px solid #eee; padding: 8px; text-align: center; }
         th { background: #f8f9fa; }
-        .profit-text { color: var(--success); font-weight: bold; }
 
-        .footer { text-align: center; margin-top: 25px; font-weight: bold; color: #888; border-top: 2px dashed #eee; padding-top: 15px; }
+        /* এডিট মোডাল স্টাইল */
+        #editModal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.3); z-index: 1000; width: 90%; max-width: 400px; }
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; }
+        .modal-btn { padding: 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px; width: 48%; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header-section">
-        <label for="logoInput">
-            <div class="logo-container" title="লোগো আপলোড করুন">
-                <img id="shopLogo" alt="Shop Logo">
-                <div id="placeholderText" class="logo-placeholder">লোগো দিন</div>
-            </div>
-        </label>
+        <label for="logoInput"><div class="logo-container"><img id="shopLogo"><div id="placeholderText">লোগো দিন</div></div></label>
         <input type="file" id="logoInput" accept="image/*" onchange="uploadLogo(event)">
         <h2>আসিফ কনফেকশনারি</h2>
     </div>
 
     <div class="section">
-        <h3>📦 ইনভেন্টরি ম্যানেজমেন্ট</h3>
+        <h3>📦 নতুন পণ্য স্টক</h3>
         <div class="input-group">
             <input type="text" id="setupCat" placeholder="ক্যাটাগরি">
             <input type="text" id="setupName" placeholder="পণ্যের নাম">
-            <input type="number" id="setupBuyPrice" placeholder="কেনা দাম (একটির)">
+            <input type="number" id="setupBuyPrice" placeholder="কেনা দাম">
         </div>
-        <button class="btn-add" onclick="saveProduct()">ইনভেন্টরিতে সেভ করুন</button>
+        <button class="btn-add" onclick="saveProduct()">সেভ করুন</button>
     </div>
 
     <div class="section">
-        <h3>💰 পণ্য বিক্রি করুন</h3>
+        <h3>💰 বিক্রি করুন</h3>
         <div class="sales-controls">
-            <select id="catFilter" class="category-filter" onchange="filterByCategory()">
-                <option value="">সব ক্যাটাগরি</option>
-            </select>
+            <select id="catFilter" class="category-filter" onchange="filterByCategory()"><option value="">সব ক্যাটাগরি</option></select>
             <div class="search-container">
-                <input type="text" id="productSearch" placeholder="নাম লিখে খুঁজুন..." oninput="searchProduct()">
+                <input type="text" id="productSearch" placeholder="সার্চ (এডিট করতে পাশে ক্লিক করুন)" oninput="searchProduct()">
                 <div id="searchList"></div>
             </div>
         </div>
-
         <div id="selectedProductInfo" style="margin: 10px 0; padding: 10px; background: #e8f4fd; border-radius: 6px; display: none; border-left: 4px solid #3498db; font-weight: bold;"></div>
-        
         <div class="input-group">
-            <input type="number" id="salePrice" placeholder="বিক্রয়মূল্য (প্রতি পিস)">
+            <input type="number" id="salePrice" placeholder="বিক্রয়মূল্য">
             <div class="qty-wrapper">
                 <button class="qty-btn" onclick="changeQty(-1)">−</button>
                 <input type="number" id="saleQty" class="qty-input" value="1" min="1">
                 <button class="qty-btn" onclick="changeQty(1)">+</button>
             </div>
         </div>
-        <button class="btn-sell" onclick="processSale()">বিক্রি সম্পন্ন করুন</button>
+        <button class="btn-sell" onclick="processSale()">বিক্রি সম্পন্ন</button>
     </div>
 
     <div class="summary">
-        <div class="card" style="background: var(--warning);">মোট কেনা: <br><span class="amount" id="totalBuy">০</span> ৳</div>
-        <div class="card" style="background: var(--blue);">মোট বিক্রি: <br><span class="amount" id="totalSell">০</span> ৳</div>
-        <div class="card" style="background: var(--success);">মোট লাভ: <br><span class="amount" id="totalProfit">০</span> ৳</div>
+        <div class="card" style="background: var(--warning);">কেনা: <span id="totalBuy">০</span>৳</div>
+        <div class="card" style="background: var(--blue);">বেচা: <span id="totalSell">০</span>৳</div>
+        <div class="card" style="background: var(--success);">লাভ: <span id="totalProfit">০</span>৳</div>
     </div>
 
-    <div class="table-container">
+    <div style="overflow-x:auto;">
         <table>
-            <thead>
-                <tr>
-                    <th>পণ্য</th>
-                    <th>সংখ্যা</th>
-                    <th>কেনা</th>
-                    <th>বিক্রি</th>
-                    <th>লাভ</th>
-                    <th>মুছুন</th>
-                </tr>
-            </thead>
+            <thead><tr><th>পণ্য</th><th>পরিমাণ</th><th>কেনা</th><th>বেচা</th><th>লাভ</th><th>মুছুন</th></tr></thead>
             <tbody id="saleLog"></tbody>
         </table>
     </div>
+</div>
 
-    <div class="footer">--- আসিফ কনফেকশনারি ---</div>
+<div class="overlay" id="overlay" onclick="closeEdit()"></div>
+<div id="editModal">
+    <h3>পণ্য সংশোধন করুন</h3>
+    <input type="text" id="editCat" placeholder="ক্যাটাগরি" style="width: 100%; margin-bottom: 10px;">
+    <input type="text" id="editName" placeholder="পণ্যের নাম" style="width: 100%; margin-bottom: 10px;">
+    <input type="number" id="editBuyPrice" placeholder="কেনা দাম" style="width: 100%; margin-bottom: 10px;">
+    <div style="display: flex; justify-content: space-between;">
+        <button class="modal-btn" style="background: #ccc;" onclick="closeEdit()">বাতিল</button>
+        <button class="modal-btn" style="background: var(--success); color: white;" onclick="updateProduct()">আপডেট</button>
+    </div>
 </div>
 
 <script>
-    // আপনার আগের v6 ইনভেন্টরি ডেটা লোড করার জন্য এই Key ব্যবহার করা হয়েছে
-    const INV_KEY = "asif_inv_v6"; 
-    const SALE_KEY = "asif_sales_v6";
-    const LOGO_KEY = "asif_shop_logo";
+    const INV_KEY = "asif_inv_v6", SALE_KEY = "asif_sales_v6", LOGO_KEY = "asif_shop_logo";
+    let inventory = JSON.parse(localStorage.getItem(INV_KEY)) || [], sales = JSON.parse(localStorage.getItem(SALE_KEY)) || [], selectedIdx = -1, editingIdx = -1;
 
-    let inventory = JSON.parse(localStorage.getItem(INV_KEY)) || [];
-    let sales = JSON.parse(localStorage.getItem(SALE_KEY)) || [];
-    let selectedIdx = -1;
+    document.addEventListener("DOMContentLoaded", () => { loadLogo(); updateCategoryDropdown(); displaySales(); });
 
-    document.addEventListener("DOMContentLoaded", () => {
-        loadLogo();
-        updateCategoryDropdown();
-        displaySales();
-    });
-
-    // লোগো আপলোড ও সেভ
     function uploadLogo(event) {
-        const file = event.target.files[0];
         const reader = new FileReader();
-        reader.onload = function(e) {
-            const imageData = e.target.result;
-            localStorage.setItem(LOGO_KEY, imageData);
-            displayLogo(imageData);
-        };
-        reader.readAsDataURL(file);
+        reader.onload = (e) => { localStorage.setItem(LOGO_KEY, e.target.result); displayLogo(e.target.result); };
+        reader.readAsDataURL(event.target.files[0]);
     }
+    function loadLogo() { const saved = localStorage.getItem(LOGO_KEY); if (saved) displayLogo(saved); }
+    function displayLogo(data) { const img = document.getElementById("shopLogo"); img.src = data; img.style.display = "block"; document.getElementById("placeholderText").style.display = "none"; }
 
-    function loadLogo() {
-        const savedLogo = localStorage.getItem(LOGO_KEY);
-        if (savedLogo) displayLogo(savedLogo);
-    }
+    function changeQty(n) { let i = document.getElementById("saleQty"); let v = parseInt(i.value) + n; if (v >= 1) i.value = v; }
 
-    function displayLogo(data) {
-        const img = document.getElementById("shopLogo");
-        const placeholder = document.getElementById("placeholderText");
-        img.src = data;
-        img.style.display = "block";
-        placeholder.style.display = "none";
-    }
-
-    // কোয়ান্টিটি চেঞ্জ
-    function changeQty(amount) {
-        let qtyInput = document.getElementById("saleQty");
-        let val = parseInt(qtyInput.value);
-        if (val + amount >= 1) qtyInput.value = val + amount;
-    }
-
-    // পণ্য সেভ
     function saveProduct() {
-        let cat = document.getElementById("setupCat").value.trim();
-        let name = document.getElementById("setupName").value.trim();
-        let buyPrice = parseFloat(document.getElementById("setupBuyPrice").value);
-
-        if (!cat || !name || isNaN(buyPrice)) return alert("তথ্য সঠিক নয়!");
-
-        inventory.push({ cat, name, buyPrice });
+        let c = document.getElementById("setupCat").value.trim(), n = document.getElementById("setupName").value.trim(), p = parseFloat(document.getElementById("setupBuyPrice").value);
+        if (!c || !n || isNaN(p)) return alert("সঠিক তথ্য দিন!");
+        inventory.push({ cat: c, name: n, buyPrice: p });
         localStorage.setItem(INV_KEY, JSON.stringify(inventory));
-        
-        document.getElementById("setupCat").value = "";
-        document.getElementById("setupName").value = "";
-        document.getElementById("setupBuyPrice").value = "";
-        updateCategoryDropdown();
-        alert("পণ্য ইনভেন্টরিতে সেভ হয়েছে!");
-    }
-
-    function updateCategoryDropdown() {
-        let catSelect = document.getElementById("catFilter");
-        let categories = [...new Set(inventory.map(p => p.cat))];
-        catSelect.innerHTML = '<option value="">সব ক্যাটাগরি</option>';
-        categories.forEach(c => {
-            let opt = document.createElement("option");
-            opt.value = c; opt.innerText = c;
-            catSelect.appendChild(opt);
-        });
+        location.reload(); 
     }
 
     function searchProduct() {
-        let query = document.getElementById("productSearch").value.toLowerCase();
-        let catValue = document.getElementById("catFilter").value;
-        let list = document.getElementById("searchList");
+        let q = document.getElementById("productSearch").value.toLowerCase(), cat = document.getElementById("catFilter").value, list = document.getElementById("searchList");
         list.innerHTML = "";
-
-        if (query === "" && catValue === "") { list.style.display = "none"; return; }
-
-        let filtered = inventory.filter((p, index) => {
-            p.originalIndex = index;
-            return p.name.toLowerCase().includes(query) && (catValue === "" || p.cat === catValue);
-        });
-
+        if (!q && !cat) { list.style.display = "none"; return; }
+        let filtered = inventory.filter((p, i) => { p.originalIndex = i; return p.name.toLowerCase().includes(q) && (!cat || p.cat === cat); });
         if (filtered.length > 0) {
             list.style.display = "block";
             filtered.forEach(p => {
-                let div = document.createElement("div");
-                div.className = "search-item";
-                div.innerHTML = `<strong>${p.name}</strong> <small>(${p.cat})</small><br>কেনা: ${p.buyPrice}৳`;
-                div.onclick = () => selectProduct(p.originalIndex);
+                let div = document.createElement("div"); div.className = "search-item";
+                div.innerHTML = `<div class="item-info" onclick="selectProduct(${p.originalIndex})"><strong>${p.name}</strong> <small>(${p.cat})</small><br>কেনা: ${p.buyPrice}৳</div>
+                                 <button class="edit-icon" onclick="openEdit(${p.originalIndex})">এডিট</button>`;
                 list.appendChild(div);
             });
-        } else { list.style.display = "none"; }
+        } else list.style.display = "none";
     }
 
-    function filterByCategory() {
-        document.getElementById("productSearch").value = "";
-        searchProduct();
+    function openEdit(index) {
+        editingIdx = index;
+        let p = inventory[index];
+        document.getElementById("editCat").value = p.cat;
+        document.getElementById("editName").value = p.name;
+        document.getElementById("editBuyPrice").value = p.buyPrice;
+        document.getElementById("editModal").style.display = "block";
+        document.getElementById("overlay").style.display = "block";
+    }
+
+    function closeEdit() { document.getElementById("editModal").style.display = "none"; document.getElementById("overlay").style.display = "none"; }
+
+    function updateProduct() {
+        inventory[editingIdx].cat = document.getElementById("editCat").value;
+        inventory[editingIdx].name = document.getElementById("editName").value;
+        inventory[editingIdx].buyPrice = parseFloat(document.getElementById("editBuyPrice").value);
+        localStorage.setItem(INV_KEY, JSON.stringify(inventory));
+        alert("আপডেট হয়েছে!");
+        location.reload();
     }
 
     function selectProduct(index) {
-        selectedIdx = index;
-        let p = inventory[index];
+        selectedIdx = index; let p = inventory[index];
         document.getElementById("productSearch").value = p.name;
-        let infoBox = document.getElementById("selectedProductInfo");
-        infoBox.style.display = "block";
-        infoBox.innerHTML = `সিলেক্টেড: ${p.name} | কেনা: ${p.buyPrice} ৳`;
+        let info = document.getElementById("selectedProductInfo");
+        info.style.display = "block"; info.innerHTML = `সিলেক্টেড: ${p.name} | কেনা: ${p.buyPrice}৳`;
         document.getElementById("searchList").style.display = "none";
     }
 
     function processSale() {
-        let sPrice = parseFloat(document.getElementById("salePrice").value);
-        let qty = parseInt(document.getElementById("saleQty").value);
-
-        if (selectedIdx === -1 || isNaN(sPrice)) return alert("পণ্য এবং মূল্য ঠিক করুন!");
-
+        let sp = parseFloat(document.getElementById("salePrice").value), q = parseInt(document.getElementById("saleQty").value);
+        if (selectedIdx === -1 || isNaN(sp)) return alert("পণ্য এবং মূল্য ঠিক করুন!");
         let p = inventory[selectedIdx];
-        let tBuy = p.buyPrice * qty;
-        let tSell = sPrice * qty;
-
-        sales.push({ name: p.name, qty: qty, buy: tBuy, sell: tSell, profit: tSell - tBuy });
+        sales.push({ name: p.name, qty: q, buy: p.buyPrice * q, sell: sp * q, profit: (sp - p.buyPrice) * q });
         localStorage.setItem(SALE_KEY, JSON.stringify(sales));
-        
-        document.getElementById("productSearch").value = "";
-        document.getElementById("salePrice").value = "";
-        document.getElementById("saleQty").value = "1";
-        document.getElementById("selectedProductInfo").style.display = "none";
-        selectedIdx = -1;
-        displaySales();
+        location.reload();
     }
 
     function displaySales() {
-        let log = document.getElementById("saleLog");
-        log.innerHTML = "";
-        let tB = 0, tS = 0, tP = 0;
-
-        sales.forEach((s, index) => {
-            tB += s.buy; tS += s.sell; tP += s.profit;
-            log.innerHTML += `<tr>
-                <td>${s.name}</td>
-                <td>${s.qty}</td>
-                <td>${s.buy.toFixed(2)}</td>
-                <td>${s.sell.toFixed(2)}</td>
-                <td class="profit-text">${s.profit.toFixed(2)}</td>
-                <td><button onclick="removeSale(${index})" style="color:red; background:none; border:none; cursor:pointer; font-size:18px;">&times;</button></td>
-            </tr>`;
+        let log = document.getElementById("saleLog"), tb = 0, ts = 0, tp = 0;
+        sales.forEach((s, i) => {
+            tb += s.buy; ts += s.sell; tp += s.profit;
+            log.innerHTML += `<tr><td>${s.name}</td><td>${s.qty}</td><td>${s.buy}</td><td>${s.sell}</td><td style="color:green;font-weight:bold">${s.profit}</td>
+            <td><button onclick="removeSale(${i})" style="color:red;border:none;background:none;cursor:pointer;">&times;</button></td></tr>`;
         });
-
-        document.getElementById("totalBuy").innerText = tB.toFixed(2);
-        document.getElementById("totalSell").innerText = tS.toFixed(2);
-        document.getElementById("totalProfit").innerText = tP.toFixed(2);
+        document.getElementById("totalBuy").innerText = tb; document.getElementById("totalSell").innerText = ts; document.getElementById("totalProfit").innerText = tp;
     }
 
-    function removeSale(index) {
-        if(confirm("মুছে ফেলবেন?")) {
-            sales.splice(index, 1);
-            localStorage.setItem(SALE_KEY, JSON.stringify(sales));
-            displaySales();
-        }
+    function removeSale(i) { if(confirm("মুছবেন?")) { sales.splice(i, 1); localStorage.setItem(SALE_KEY, JSON.stringify(sales)); location.reload(); } }
+    function updateCategoryDropdown() {
+        let s = document.getElementById("catFilter"), cats = [...new Set(inventory.map(p => p.cat))];
+        cats.forEach(c => { let o = document.createElement("option"); o.value = c; o.innerText = c; s.appendChild(o); });
     }
+    function filterByCategory() { document.getElementById("productSearch").value = ""; searchProduct(); }
 </script>
-
 </body>
 </html>
