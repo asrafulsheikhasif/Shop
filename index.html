@@ -3,47 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>আসিফ কনফেকশনারি - আলটিমেট ইনভেন্টরি</title>
+    <title>আসিফ কনফেকশনারি - স্মার্ট বিলিং সিস্টেম</title>
+    <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
         :root { --primary: #2c3e50; --success: #27ae60; --danger: #e74c3c; --warning: #f39c12; --light: #f4f7f6; --blue: #2980b9; }
         body { font-family: 'Segoe UI', Arial, sans-serif; background-color: var(--light); padding: 15px; margin: 0; }
-        .container { max-width: 850px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         
         .header-section { text-align: center; margin-bottom: 20px; }
-        .logo-container { width: 85px; height: 85px; margin: 0 auto 10px; border-radius: 50%; border: 3px solid var(--primary); overflow: hidden; background: #eee; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .logo-container { width: 70px; height: 70px; margin: 0 auto 5px; border-radius: 50%; border: 3px solid var(--primary); overflow: hidden; background: #eee; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         #shopLogo { width: 100%; height: 100%; object-fit: cover; display: none; }
-        #logoInput { display: none; }
         
-        h2 { margin: 5px 0; color: var(--primary); }
-        .section { border: 1px solid #eee; padding: 15px; border-radius: 10px; margin-bottom: 20px; background: #fff; }
-        .input-group { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; }
-        input, select { flex: 1; min-width: 110px; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
+        .section { border: 1px solid #eee; padding: 15px; border-radius: 10px; margin-bottom: 15px; background: #fff; }
+        .input-group { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+        input, select { flex: 1; min-width: 90px; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
         
-        .btn-add { background: var(--primary); color: white; width: 100%; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-        .btn-sell { background: var(--success); color: white; width: 100%; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px; }
-        .btn-clear { background: var(--danger); color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 12px; margin-top: 10px; float: right; }
-
-        .search-container { position: relative; width: 100%; margin-bottom: 10px; }
-        #searchList { position: absolute; width: 100%; background: white; border: 1px solid #ddd; z-index: 100; max-height: 250px; overflow-y: auto; border-radius: 0 0 6px 6px; display: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .search-item { padding: 10px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; background: #fff; }
-        .item-info { cursor: pointer; flex-grow: 1; text-align: left; font-size: 13px; }
-        .edit-icon { background: var(--warning); color: white; padding: 5px 10px; border-radius: 4px; font-size: 11px; cursor: pointer; border: none; margin-left: 10px; }
-
-        .qty-wrapper { display: flex; align-items: center; gap: 5px; background: #f9f9f9; border: 1px solid #ddd; border-radius: 6px; padding: 5px; flex: 1; justify-content: center; }
-        .qty-btn { width: 35px; height: 35px; border: none; background: #eee; border-radius: 4px; cursor: pointer; font-size: 20px; font-weight: bold; }
-        .qty-input { width: 45px !important; text-align: center; border: none !important; background: transparent !important; padding: 0 !important; min-width: unset !important; font-weight: bold; }
-
-        .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 15px 0; clear: both; }
-        .card { padding: 12px; border-radius: 8px; color: white; text-align: center; }
-        .card .amount { font-size: 18px; font-weight: bold; }
+        #reader { width: 100%; max-width: 320px; margin: 5px auto; border-radius: 8px; display: none; border: 2px solid var(--blue); }
         
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
-        th, td { border: 1px solid #eee; padding: 8px; text-align: center; }
-        th { background: #f8f9fa; }
+        .btn { border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; margin-bottom: 8px; }
+        .btn-scan { background: var(--blue); color: white; }
+        .btn-add-cart { background: var(--primary); color: white; }
+        .btn-checkout { background: var(--success); color: white; font-size: 16px; margin-top: 10px; }
+        .btn-clear { background: var(--danger); color: white; padding: 5px 10px; width: auto; font-size: 12px; float: right; }
 
-        #editModal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.3); z-index: 1000; width: 90%; max-width: 400px; }
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; }
-        .modal-btn { padding: 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px; width: 48%; }
+        .search-box-wrapper { display: flex; gap: 5px; position: relative; margin-bottom: 8px; }
+        #searchList { position: absolute; width: 100%; top: 42px; background: white; border: 1px solid #ddd; z-index: 100; max-height: 200px; overflow-y: auto; border-radius: 6px; display: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .search-item { padding: 10px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; }
+
+        /* কার্ট স্টাইল */
+        .cart-section { background: #fff9f0; border: 2px solid #f39c12; padding: 15px; border-radius: 10px; margin-bottom: 15px; }
+        .cart-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .cart-table th { text-align: left; border-bottom: 2px solid #f39c12; padding: 5px; }
+        .cart-table td { padding: 8px 5px; border-bottom: 1px solid #eee; }
+        .total-row { font-size: 18px; font-weight: bold; text-align: right; margin-top: 10px; color: var(--primary); }
+
+        .summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 15px; clear: both; }
+        .card { padding: 10px; border-radius: 8px; color: white; text-align: center; font-size: 12px; }
+        
+        table.main-report { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; }
+        .main-report th, .main-report td { border: 1px solid #eee; padding: 6px; text-align: center; }
     </style>
 </head>
 <body>
@@ -51,164 +49,214 @@
 <div class="container">
     <div class="header-section">
         <label for="logoInput"><div class="logo-container"><img id="shopLogo"><div id="placeholderText">লোগো</div></div></label>
-        <input type="file" id="logoInput" accept="image/*" onchange="uploadLogo(event)">
+        <input type="file" id="logoInput" accept="image/*" onchange="uploadLogo(event)" style="display:none">
         <h2>আসিফ কনফেকশনারি</h2>
     </div>
 
-    <div class="section">
-        <h3>📦 ইনভেন্টরি সেটআপ</h3>
-        <div class="input-group">
-            <input type="text" id="setupCat" placeholder="ক্যাটাগরি">
-            <input type="text" id="setupName" placeholder="পণ্যের নাম">
-        </div>
-        <div class="input-group">
-            <input type="number" id="setupBuyPrice" placeholder="কেনার দাম">
-            <input type="number" id="setupSalePrice" placeholder="বিক্রয়মূল্য">
-        </div>
-        <button class="btn-add" onclick="saveProduct()">ইনভেন্টরিতে সেভ করুন</button>
+    <div id="reader"></div>
+
+    <div class="cart-section">
+        <h3 style="margin-top:0; color:#d35400;">🛒 বর্তমান কাস্টমারের লিস্ট</h3>
+        <table class="cart-table">
+            <thead>
+                <tr>
+                    <th>পণ্য</th>
+                    <th>পরিমাণ</th>
+                    <th>মূল্য</th>
+                    <th>মোট</th>
+                    <th>X</th>
+                </tr>
+            </thead>
+            <tbody id="cartBody">
+                </tbody>
+        </table>
+        <div class="total-row">মোট বিল: <span id="cartTotal">০</span> ৳</div>
+        <button class="btn btn-checkout" onclick="checkout()">বিক্রি সম্পন্ন করুন (রিপোর্টে যোগ করুন)</button>
     </div>
 
     <div class="section">
-        <h3>💰 দ্রুত বিক্রি</h3>
-        <select id="catFilter" onchange="filterByCategory()" style="margin-bottom:10px; width:100%"><option value="">সব ক্যাটাগরি</option></select>
-        <div class="search-container">
-            <input type="text" id="productSearch" placeholder="পণ্য খুঁজুন..." oninput="searchProduct()">
+        <h3>🔍 পণ্য খুঁজুন ও কার্টে যোগ করুন</h3>
+        <button class="btn btn-scan" onclick="startScanner('sale')">📷 স্ক্যান করে পণ্য খুঁজুন</button>
+        
+        <div class="search-box-wrapper">
+            <input type="text" id="productSearch" placeholder="নাম বা কোড লিখে খুঁজুন..." oninput="searchProduct()">
+            <select id="catFilter" style="max-width: 120px;" onchange="searchProduct()">
+                <option value="">সব ক্যাটাগরি</option>
+            </select>
             <div id="searchList"></div>
         </div>
         
-        <div id="selectedProductInfo" style="margin: 10px 0; padding: 10px; background: #e8f4fd; border-radius: 6px; display: none; border-left: 4px solid #3498db; font-size:14px;"></div>
+        <div id="selectedProductInfo" style="margin: 5px 0; padding: 8px; background: #e8f4fd; border-radius: 6px; display: none; border-left: 4px solid #3498db; font-size:13px;"></div>
         
-        <div class="input-group" style="align-items: center;">
-            <div style="flex:1"><strong>বিক্রয়মূল্য:</strong> <span id="currentSalePriceDisplay">০</span>৳</div>
-            <div class="qty-wrapper">
-                <button class="qty-btn" onclick="changeQty(-1)">−</button>
-                <input type="number" id="saleQty" class="qty-input" value="1" min="1">
-                <button class="qty-btn" onclick="changeQty(1)">+</button>
-            </div>
+        <div class="input-group" style="align-items: center; background: #f4f4f4; padding: 10px; border-radius: 6px;">
+            <div style="flex:1"><strong>দর:</strong> <span id="currentSalePriceDisplay">০</span>৳</div>
+            <input type="number" id="saleQty" value="1" min="1" style="max-width: 60px; text-align: center;">
+            <button class="btn-add-cart" style="flex:2; margin-bottom:0;" onclick="addToCart()">কার্টে যোগ করুন</button>
         </div>
-        <button class="btn-sell" onclick="processSale()">বিক্রি কনফার্ম করুন</button>
     </div>
 
-    <button class="btn-clear" onclick="clearSalesHistory()">সব ডিলিট করুন</button>
+    <button class="btn-clear" onclick="clearSalesHistory()">হিস্টোরি ডিলিট</button>
+    <h3>📊 আজকের মেইন রিপোর্ট</h3>
     <div class="summary">
-        <div class="card" style="background: var(--warning);">কেনা: <span id="totalBuy">০</span>৳</div>
-        <div class="card" style="background: var(--blue);">বেচা: <span id="totalSell">০</span>৳</div>
-        <div class="card" style="background: var(--success);">লাভ: <span id="totalProfit">০</span>৳</div>
+        <div class="card" style="background: var(--warning);">কেনা: <b id="totalBuy">০</b></div>
+        <div class="card" style="background: var(--blue);">বেচা: <b id="totalSell">০</b></div>
+        <div class="card" style="background: var(--success);">লাভ: <b id="totalProfit">০</b></div>
     </div>
 
     <div style="overflow-x:auto;">
-        <table>
-            <thead><tr><th>পণ্য</th><th>পরিমাণ</th><th>কেনা</th><th>বেচা</th><th>লাভ</th><th>X</th></tr></thead>
+        <table class="main-report">
+            <thead><tr><th>পণ্য</th><th>সংখ্যা</th><th>বিক্রি</th><th>লাভ</th><th>X</th></tr></thead>
             <tbody id="saleLog"></tbody>
         </table>
     </div>
-</div>
 
-<div class="overlay" id="overlay" onclick="closeEdit()"></div>
-<div id="editModal">
-    <h3>পণ্য সংশোধন</h3>
-    <input type="text" id="editCat" placeholder="ক্যাটাগরি" style="width: 100%; margin-bottom: 10px;">
-    <input type="text" id="editName" placeholder="পণ্যের নাম" style="width: 100%; margin-bottom: 10px;">
-    <input type="number" id="editBuyPrice" placeholder="কেনার দাম" style="width: 100%; margin-bottom: 10px;">
-    <input type="number" id="editSalePrice" placeholder="বিক্রয়মূল্য" style="width: 100%; margin-bottom: 10px;">
-    <div style="display: flex; justify-content: space-between;">
-        <button class="modal-btn" style="background: #ccc;" onclick="closeEdit()">বাতিল</button>
-        <button class="modal-btn" style="background: var(--success); color: white;" onclick="updateProduct()">আপডেট</button>
+    <div class="section" style="margin-top:30px; opacity: 0.8;">
+        <h4>📦 নতুন পণ্য ইনভেন্টরি করুন</h4>
+        <div class="input-group">
+            <input type="text" id="setupBarcode" placeholder="বারকোড">
+            <input type="text" id="setupCat" placeholder="ক্যাটাগরি">
+            <input type="text" id="setupName" placeholder="নাম">
+            <input type="number" id="setupBuyPrice" placeholder="কেনা">
+            <input type="number" id="setupSalePrice" placeholder="বেচা">
+        </div>
+        <button class="btn btn-scan" style="background:var(--primary)" onclick="saveProduct()">ইনভেন্টরিতে সেভ</button>
     </div>
 </div>
 
 <script>
     const INV_KEY = "asif_inv_v6", SALE_KEY = "asif_sales_v6", LOGO_KEY = "asif_shop_logo";
-    let inventory = JSON.parse(localStorage.getItem(INV_KEY)) || [], sales = JSON.parse(localStorage.getItem(SALE_KEY)) || [], selectedIdx = -1, editingIdx = -1;
+    let inventory = JSON.parse(localStorage.getItem(INV_KEY)) || [], 
+        sales = JSON.parse(localStorage.getItem(SALE_KEY)) || [], 
+        cart = [], selectedIdx = -1;
+    let html5QrCode;
 
-    document.addEventListener("DOMContentLoaded", () => { loadLogo(); updateCategoryDropdown(); displaySales(); });
+    document.addEventListener("DOMContentLoaded", () => { loadLogo(); updateCategoryList(); displaySales(); });
 
-    function uploadLogo(e) { const r = new FileReader(); r.onload = (ev) => { localStorage.setItem(LOGO_KEY, ev.target.result); displayLogo(ev.target.result); }; r.readAsDataURL(e.target.files[0]); }
-    function loadLogo() { const s = localStorage.getItem(LOGO_KEY); if (s) displayLogo(s); }
-    function displayLogo(d) { const i = document.getElementById("shopLogo"); i.src = d; i.style.display = "block"; document.getElementById("placeholderText").style.display = "none"; }
+    // --- কার্ট ফাংশন ---
+    function addToCart() {
+        if (selectedIdx === -1) return alert("পণ্য সিলেক্ট করুন!");
+        let q = parseInt(document.getElementById("saleQty").value);
+        let p = inventory[selectedIdx];
+        
+        cart.push({ 
+            invIdx: selectedIdx,
+            name: p.name, 
+            qty: q, 
+            buyRate: p.buyPrice,
+            saleRate: p.salePrice,
+            total: p.salePrice * q 
+        });
+        
+        selectedIdx = -1;
+        document.getElementById("productSearch").value = "";
+        document.getElementById("saleQty").value = "1";
+        document.getElementById("selectedProductInfo").style.display = "none";
+        renderCart();
+    }
 
-    function changeQty(n) { let i = document.getElementById("saleQty"); let v = parseInt(i.value) + n; if (v >= 1) i.value = v; }
+    function renderCart() {
+        let body = document.getElementById("cartBody"), total = 0;
+        body.innerHTML = "";
+        cart.forEach((item, i) => {
+            total += item.total;
+            body.innerHTML += `<tr>
+                <td>${item.name}</td>
+                <td>${item.qty}</td>
+                <td>${item.saleRate}</td>
+                <td>${item.total}</td>
+                <td><button onclick="removeFromCart(${i})" style="color:red; border:none; background:none; cursor:pointer;">&times;</button></td>
+            </tr>`;
+        });
+        document.getElementById("cartTotal").innerText = total;
+    }
 
-    function saveProduct() {
-        let c = document.getElementById("setupCat").value.trim(), n = document.getElementById("setupName").value.trim(), bp = parseFloat(document.getElementById("setupBuyPrice").value), sp = parseFloat(document.getElementById("setupSalePrice").value);
-        if (!c || !n || isNaN(bp) || isNaN(sp)) return alert("সব তথ্য দিন!");
-        inventory.push({ cat: c, name: n, buyPrice: bp, salePrice: sp });
-        localStorage.setItem(INV_KEY, JSON.stringify(inventory));
-        location.reload();
+    function removeFromCart(i) { cart.splice(i, 1); renderCart(); }
+
+    function checkout() {
+        if (cart.length === 0) return alert("কার্ট খালি!");
+        if (confirm("আপনি কি এই বিলটি কনফার্ম করতে চান?")) {
+            cart.forEach(item => {
+                sales.push({
+                    name: item.name,
+                    qty: item.qty,
+                    buy: item.buyRate * item.qty,
+                    sell: item.total,
+                    profit: (item.saleRate - item.buyRate) * item.qty
+                });
+            });
+            localStorage.setItem(SALE_KEY, JSON.stringify(sales));
+            cart = [];
+            renderCart();
+            displaySales();
+            alert("বিক্রি সফলভাবে রিপোর্টে যোগ হয়েছে!");
+        }
+    }
+
+    // --- সার্চ ও স্ক্যানার ---
+    function startScanner(mode) {
+        document.getElementById("reader").style.display = "block";
+        html5QrCode = new Html5Qrcode("reader");
+        html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: 200 }, (decodedText) => {
+            html5QrCode.stop().then(() => {
+                document.getElementById("reader").style.display = "none";
+                let idx = inventory.findIndex(p => p.barcode === decodedText);
+                if (idx !== -1) { selectProduct(idx); } else { alert("ইনভেন্টরিতে নেই!"); }
+            });
+        }).catch(() => alert("ক্যামেরা এরর!"));
     }
 
     function searchProduct() {
         let q = document.getElementById("productSearch").value.toLowerCase(), cat = document.getElementById("catFilter").value, list = document.getElementById("searchList");
         list.innerHTML = ""; if (!q && !cat) { list.style.display = "none"; return; }
-        let filtered = inventory.filter((p, i) => { p.originalIndex = i; return p.name.toLowerCase().includes(q) && (!cat || p.cat === cat); });
+        let filtered = inventory.filter((p, i) => { p.originalIdx = i; return (p.name.toLowerCase().includes(q) || (p.barcode && p.barcode.includes(q))) && (!cat || p.cat === cat); });
         if (filtered.length > 0) {
             list.style.display = "block";
             filtered.forEach(p => {
-                let div = document.createElement("div"); div.className = "search-item";
-                div.innerHTML = `<div class="item-info" onclick="selectProduct(${p.originalIndex})"><strong>${p.name}</strong> <small>(${p.cat})</small><br>বিক্রয়: ${p.salePrice}৳</div>
-                                 <button class="edit-icon" onclick="openEdit(${p.originalIndex})">এডিট</button>`;
-                list.appendChild(div);
+                list.innerHTML += `<div class="search-item" onclick="selectProduct(${p.originalIdx})">
+                    <div><strong>${p.name}</strong><br><small>${p.cat}</small></div>
+                    <div style="color:var(--blue)">${p.salePrice}৳</div>
+                </div>`;
             });
         } else list.style.display = "none";
     }
 
-    function openEdit(index) {
-        editingIdx = index; let p = inventory[index];
-        document.getElementById("editCat").value = p.cat; document.getElementById("editName").value = p.name;
-        document.getElementById("editBuyPrice").value = p.buyPrice; document.getElementById("editSalePrice").value = p.salePrice || 0;
-        document.getElementById("editModal").style.display = "block"; document.getElementById("overlay").style.display = "block";
-    }
-
-    function closeEdit() { document.getElementById("editModal").style.display = "none"; document.getElementById("overlay").style.display = "none"; }
-
-    function updateProduct() {
-        inventory[editingIdx].cat = document.getElementById("editCat").value;
-        inventory[editingIdx].name = document.getElementById("editName").value;
-        inventory[editingIdx].buyPrice = parseFloat(document.getElementById("editBuyPrice").value);
-        inventory[editingIdx].salePrice = parseFloat(document.getElementById("editSalePrice").value);
-        localStorage.setItem(INV_KEY, JSON.stringify(inventory));
-        location.reload();
-    }
-
-    function selectProduct(index) {
-        selectedIdx = index; let p = inventory[index];
+    function selectProduct(idx) {
+        selectedIdx = idx; let p = inventory[idx];
         document.getElementById("productSearch").value = p.name;
         document.getElementById("currentSalePriceDisplay").innerText = p.salePrice;
         document.getElementById("selectedProductInfo").style.display = "block";
-        document.getElementById("selectedProductInfo").innerHTML = `সিলেক্টেড: <strong>${p.name}</strong> | স্টক রেট: ${p.buyPrice}৳`;
+        document.getElementById("selectedProductInfo").innerHTML = `সিলেক্টেড: <b>${p.name}</b>`;
         document.getElementById("searchList").style.display = "none";
     }
 
-    function processSale() {
-        let q = parseInt(document.getElementById("saleQty").value);
-        if (selectedIdx === -1) return alert("পণ্য সিলেক্ট করুন!");
-        let p = inventory[selectedIdx];
-        sales.push({ name: p.name, qty: q, buy: p.buyPrice * q, sell: p.salePrice * q, profit: (p.salePrice - p.buyPrice) * q });
-        localStorage.setItem(SALE_KEY, JSON.stringify(sales));
-        location.reload();
-    }
-
+    // --- রিপোর্ট ও অন্যান্য ---
     function displaySales() {
         let log = document.getElementById("saleLog"), tb = 0, ts = 0, tp = 0;
+        log.innerHTML = "";
         sales.forEach((s, i) => {
             tb += s.buy; ts += s.sell; tp += s.profit;
-            log.innerHTML += `<tr><td>${s.name}</td><td>${s.qty}</td><td>${s.buy}</td><td>${s.sell}</td><td style="color:green;font-weight:bold">${s.profit}</td>
-            <td><button onclick="removeSale(${i})" style="color:red;border:none;background:none;cursor:pointer;">&times;</button></td></tr>`;
+            log.innerHTML += `<tr><td>${s.name}</td><td>${s.qty}</td><td>${s.sell}</td><td style="color:green">${s.profit.toFixed(2)}</td>
+            <td><button onclick="removeSale(${i})" style="color:red;border:none;background:none">&times;</button></td></tr>`;
         });
         document.getElementById("totalBuy").innerText = tb.toFixed(2);
         document.getElementById("totalSell").innerText = ts.toFixed(2);
         document.getElementById("totalProfit").innerText = tp.toFixed(2);
     }
 
-    function removeSale(i) { if(confirm("এই আইটেমটি মুছবেন?")) { sales.splice(i, 1); localStorage.setItem(SALE_KEY, JSON.stringify(sales)); location.reload(); } }
-    
-    function clearSalesHistory() { if(confirm("সতর্কতা: সারাদিনের সকল বিক্রির হিস্টোরি মুছে যাবে। আপনি কি নিশ্চিত?")) { localStorage.removeItem(SALE_KEY); location.reload(); } }
-
-    function updateCategoryDropdown() {
-        let s = document.getElementById("catFilter"), cats = [...new Set(inventory.map(p => p.cat))];
-        cats.forEach(c => { let o = document.createElement("option"); o.value = c; o.innerText = c; s.appendChild(o); });
+    function removeSale(i) { if(confirm("মুছবেন?")) { sales.splice(i, 1); localStorage.setItem(SALE_KEY, JSON.stringify(sales)); displaySales(); } }
+    function clearSalesHistory() { if(confirm("সব ডিলিট?")) { localStorage.removeItem(SALE_KEY); location.reload(); } }
+    function saveProduct() {
+        let b = document.getElementById("setupBarcode").value, c = document.getElementById("setupCat").value, n = document.getElementById("setupName").value, bp = parseFloat(document.getElementById("setupBuyPrice").value), sp = parseFloat(document.getElementById("setupSalePrice").value);
+        inventory.push({ barcode: b, cat: c, name: n, buyPrice: bp, salePrice: sp });
+        localStorage.setItem(INV_KEY, JSON.stringify(inventory));
+        alert("সেভ হয়েছে!"); location.reload();
     }
-    function filterByCategory() { document.getElementById("productSearch").value = ""; searchProduct(); }
+    function updateCategoryList() {
+        let sel = document.getElementById("catFilter"), cats = [...new Set(inventory.map(p => p.cat))];
+        cats.forEach(c => { if(c) { let o = document.createElement("option"); o.value = c; o.innerText = c; sel.appendChild(o); } });
+    }
+    function uploadLogo(e) { let r = new FileReader(); r.onload = (ev) => localStorage.setItem(LOGO_KEY, ev.target.result); r.readAsDataURL(e.target.files[0]); }
+    function loadLogo() { let s = localStorage.getItem(LOGO_KEY); if(s) document.getElementById("shopLogo").src = s; document.getElementById("shopLogo").style.display = s ? "block" : "none"; }
 </script>
 </body>
 </html>
